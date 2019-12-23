@@ -9,7 +9,7 @@ namespace RestaurantOrderApp.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(RestaurantOrderApp.Models.ApplicationDbContext context)

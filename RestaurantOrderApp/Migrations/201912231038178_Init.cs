@@ -11,7 +11,7 @@ namespace RestaurantOrderApp.Migrations
                 "dbo.Drinks",
                 c => new
                     {
-                        Id = c.Byte(nullable: false),
+                        Id = c.Int(nullable: false, identity: true),
                         Name = c.String(),
                         Price = c.Double(nullable: false),
                     })
@@ -21,7 +21,7 @@ namespace RestaurantOrderApp.Migrations
                 "dbo.Meals",
                 c => new
                     {
-                        Id = c.Byte(nullable: false),
+                        Id = c.Int(nullable: false, identity: true),
                         Name = c.String(),
                         Price = c.Double(nullable: false),
                     })

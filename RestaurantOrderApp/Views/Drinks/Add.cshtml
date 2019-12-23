@@ -1,0 +1,20 @@
+﻿@model RestaurantOrderApp.Models.Drink
+@{
+    ViewBag.Title = "Add";
+}
+
+<h2>Add Drink</h2>
+
+@using (Html.BeginForm("Save", "Drinks"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Price)
+        @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+    </div>
+    @Html.HiddenFor(m => m.Id)
+    <button type="submit" class="btn btn-default">Save</button>
+}
