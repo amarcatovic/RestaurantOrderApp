@@ -22,6 +22,8 @@ namespace RestaurantOrderApp.Models
     {
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Drink> Drinks { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Table> Tables { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

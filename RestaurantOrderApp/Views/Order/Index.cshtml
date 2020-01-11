@@ -1,0 +1,87 @@
+﻿<h2>New Order for Table</h2>
+
+<form id="newOrder">
+    <div class="form-group">
+        <label>Table</label>
+        <div class="tt-container">
+            <input id="table" name="table" required type="text" value="" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Drink</label>
+        <div class="tt-container">
+            <input id="drink" name="drink" data-rule-validDrink="true" type="text" value="" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <ul id="drinks" class="list-group"></ul>
+        </div>
+    </div>
+
+    <button class="btn btn-primary">Sumbit</button>
+</form>
+
+@section scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+        $(document).ready(function () {
+
+            var vm = {
+                drinkIds: []
+            };
+
+            var drinks = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/Api/Drinks?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#drink').typeahead({ minLength: 2, highlight: true }, {
+                name: 'drinks',
+                display: 'name',
+                source: drinks
+            }).on("typeahead:select", function (e, drink) {
+                $('#drinks').append(`<li class='list-group-item'>${drink.name}</li>`);
+                $('#drink').typeahead("val", "");
+                vm.drinkIds.push(drink.id);
+            });
+
+            $.validator.addMethod("validDrinks", function () {
+                return vm.drinkIds.length > 0;
+            }, "Please enter at least one valid drink");
+
+            var validator = $("#newOrder").validate({
+                submitHandler: function () {
+                    var tableVal = $('#table').val();
+                    vm.tableId = tableVal;
+                    $.ajax({
+                        url: "/Api/Order",
+                        method: "post",
+                        data: vm
+                    })
+                        .done(function () {
+                            console.log(vm);
+                            toastr.success("Order successfully recorded!");
+                            $('#table').typeahead("val", "");
+                            $('#drink').typeahead("val", "");
+                            $('#drinks').empty();
+                            vm = { drinkIds: [] };
+                            validator.resetForm();
+                        })
+                        .fail(function () {
+                            toastr.error("Something went wrong!");
+                            console.log("ERROR" + vm);
+                        });
+                    return false;
+                }
+            });
+        });
+    </script>
+}
