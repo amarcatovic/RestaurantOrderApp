@@ -14,6 +14,10 @@ namespace RestaurantOrderApp.App_Start
         {
             Mapper.CreateMap<Drink, DrinkDto>();
             Mapper.CreateMap<DrinkDto, Drink>();
+            Mapper.CreateMap<Order, OrderDto>();
+            Mapper.CreateMap<OrderDto, Order>();
+            Mapper.CreateMap<Meal, MealDto>();
+            Mapper.CreateMap<MealDto, Meal>();
         }
     }
 }

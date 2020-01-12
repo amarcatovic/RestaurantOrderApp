@@ -10,12 +10,21 @@
     <div class="form-group">
         <label>Drink</label>
         <div class="tt-container">
-            <input id="drink" name="drink" data-rule-validDrink="true" type="text" value="" class="form-control" />
+            <input id="drink" name="drink" type="text" value="" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Meal</label>
+        <div class="tt-container">
+            <input id="meal" name="meal" type="text" value="" class="form-control" />
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
             <ul id="drinks" class="list-group"></ul>
+        </div>
+        <div class="col-md-4">
+            <ul id="meals" class="list-group"></ul>
         </div>
     </div>
 
@@ -31,7 +40,8 @@
         $(document).ready(function () {
 
             var vm = {
-                drinkIds: []
+                drinkIds: [],
+                mealIds: []
             };
 
             var drinks = new Bloodhound({
@@ -53,9 +63,24 @@
                 vm.drinkIds.push(drink.id);
             });
 
-            $.validator.addMethod("validDrinks", function () {
-                return vm.drinkIds.length > 0;
-            }, "Please enter at least one valid drink");
+            var meals = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/Api/Meal?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#meal').typeahead({ minLength: 2, highlight: true }, {
+                name: 'meals',
+                display: 'name',
+                source: meals
+            }).on("typeahead:select", function (e, meal) {
+                $('#meals').append(`<li class='list-group-item'>${meal.name}</li>`);
+                $('#meal').typeahead("val", "");
+                vm.mealIds.push(meal.id);
+            });
 
             var validator = $("#newOrder").validate({
                 submitHandler: function () {
@@ -69,15 +94,16 @@
                         .done(function () {
                             console.log(vm);
                             toastr.success("Order successfully recorded!");
-                            $('#table').typeahead("val", "");
+                            $('#table').val('');
                             $('#drink').typeahead("val", "");
                             $('#drinks').empty();
-                            vm = { drinkIds: [] };
+                            $('#meals').empty();
+                            vm = { drinkIds: [], mealIds: [] };
                             validator.resetForm();
                         })
                         .fail(function () {
                             toastr.error("Something went wrong!");
-                            console.log("ERROR" + vm);
+                            console.log(vm);
                         });
                     return false;
                 }

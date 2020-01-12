@@ -10,5 +10,6 @@ namespace RestaurantOrderApp.Dtos
     {
         public int TableId { get; set; }
         public List<int> DrinkIds { get; set; }
+        public List<int> MealIds { get; set; }
     }
 }

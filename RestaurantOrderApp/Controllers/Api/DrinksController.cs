@@ -19,13 +19,12 @@ namespace RestaurantOrderApp.Controllers.Api
         }
         public IHttpActionResult GetDrinks(string query = null)
         {
-            var drinksFromDb = _context.Drinks;
-            if (!String.IsNullOrWhiteSpace(query))
-                drinksFromDb.Where(d => d.Name.Contains(query));
+            if (String.IsNullOrWhiteSpace(query))
+                return Ok(_context.Drinks.ToList().Select(Mapper.Map<Drink, DrinkDto>));
 
-            var customerDto = drinksFromDb.ToList().Select(Mapper.Map<Drink, DrinkDto>);
-
-            return Ok(customerDto);
+            var drinksFromDb = _context.Drinks.Where(d => d.Name.Contains(query));
+            var drinksDto = drinksFromDb.ToList().Select(Mapper.Map<Drink, DrinkDto>);
+            return Ok(drinksDto);
         }
     }
 }

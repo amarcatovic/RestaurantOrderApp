@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "New";
+}
+<h2>New Order</h2>
+
+<br />
+    <table id="menuDrinks" class="table table-bordered table-hover">
+        <thead>
+            <tr><td>Name</td><td>Price</td><td>Add To Menu</td></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+<br />
+    <table id="menuMeals" class="table table-bordered table-hover">
+        <thead>
+            <tr><td>Name</td><td>Price</td><td>Add To Menu</td></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <br />
+
+    <form id="newOrder">
+        <label>Table</label>
+        <div class="tt-container">
+            <input id="table" name="table" required type="text" value="" class="form-control" />
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4">
+                <ul id="drinks" class="list-group"></ul>
+            </div>
+            <div class="col-md-4">
+                <ul id="meals" class="list-group"></ul>
+            </div>
+        </div>
+        <h2 id="price">Price: $0.0</h2>
+        <button class="btn btn-primary">Sumbit</button>
+    </form>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+        $(document).ready(function () {
+
+            let price = 0.0;
+            vm = {
+                drinkIds: [],
+                mealIds: []
+            };
+
+            var table = $('#menuDrinks').DataTable({
+                ajax: {
+                    url: "/api/drinks",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                    },
+                    {
+                        data: "price"
+                    },
+                    {
+                        data: "id",
+                        render: function (data, type, drink) {
+                            return `<button class="btn-link js-add-drink" data-drink-id = "${drink.id}" data-drink-name = "${drink.name}" data-drink-price = "${drink.price}">Add Drink</button>`;
+                        }
+                    }
+                ]
+            });
+
+            var table = $('#menuMeals').DataTable({
+                ajax: {
+                    url: "/api/meal",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                    },
+                    {
+                        data: "price"
+                    },
+                    {
+                        data: "id",
+                        render: function (data, type, meal) {
+                            return `<button class="btn-link js-add-meal" data-meal-id = "${meal.id}" data-meal-name = "${meal.name}" data-meal-price = "${meal.price}" >Add Meal</button>`;
+                        }
+                    }
+                ]
+            });
+
+            $('#menuDrinks').on("click", ".js-add-drink", function () {
+                let button = $(this);
+                vm.drinkIds.push(button.attr("data-drink-id"));
+                toastr.success("Drink successfully added");
+                $('#drinks').append(`<li class='list-group-item'>${button.attr("data-drink-name")}</li>`);
+                price += parseFloat(button.attr("data-drink-price"));
+                $('#price').text("Price: $" + price);
+            });
+
+            $('#menuMeals').on("click", ".js-add-meal", function () {
+                let button = $(this);
+                vm.mealIds.push(button.attr("data-meal-id"));
+                toastr.success("Meal successfully added");
+                $('#meals').append(`<li class='list-group-item'>${button.attr("data-meal-name")}</li>`);
+                 price += parseFloat(button.attr("data-meal-price"));
+                $('#price').text("Price: $" + price);
+            });
+
+            var validator = $("#newOrder").validate({
+                submitHandler: function () {
+                    var tableVal = $('#table').val();
+                    vm.tableId = tableVal;
+                    $.ajax({
+                        url: "/Api/Order",
+                        method: "post",
+                        data: vm
+                    })
+                        .done(function () {
+                            console.log(vm);
+                            toastr.success("Order successfully recorded!");
+                            $('#table').val('');
+                            $('#drinks').empty();
+                            $('#meals').empty();
+                            vm = { drinkIds: [], mealIds: [] };
+                            validator.resetForm();
+                            price = 0.0;
+                            $('#price').text("Price: $" + price);
+                        })
+                        .fail(function () {
+                            toastr.error("Something went wrong!");
+                            console.log(vm);
+                        });
+                    return false;
+                }
+            });
+
+        });
+
+    </script>
+
+
+}
