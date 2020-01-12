@@ -26,5 +26,20 @@ namespace RestaurantOrderApp.Controllers.Api
             var drinksDto = drinksFromDb.ToList().Select(Mapper.Map<Drink, DrinkDto>);
             return Ok(drinksDto);
         }
+
+        [HttpPost]
+        public IHttpActionResult createDrink(DrinkDto drinkDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var drink = Mapper.Map<DrinkDto, Drink>(drinkDto);
+
+            _context.Drinks.Add(drink);
+            _context.SaveChanges();
+
+            drinkDto.Id = drink.Id;
+            return Created(new Uri(Request.RequestUri + "/" + drink.Id), drinkDto);
+        }
     }
 }

@@ -27,5 +27,18 @@ namespace RestaurantOrderApp.Controllers.Api
             var mealsDto = mealsFromDb.ToList().Select(Mapper.Map<Meal, MealDto>);
             return Ok(mealsDto);
         }
+        [HttpPost]
+        public IHttpActionResult createMeal(MealDto mealDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Not Valid");
+
+            var meal = Mapper.Map<MealDto, Meal>(mealDto);
+            _context.Meals.Add(meal);
+            _context.SaveChanges();
+            mealDto.Id = meal.Id;
+
+            return Created(new Uri(Request.RequestUri + "/" + mealDto.Id), mealDto);
+        }
     }
 }

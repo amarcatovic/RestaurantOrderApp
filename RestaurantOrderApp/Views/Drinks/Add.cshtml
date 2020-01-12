@@ -1,20 +1,61 @@
-﻿@model RestaurantOrderApp.Models.Drink
-@{
+﻿@{
     ViewBag.Title = "Add";
 }
 
-<h2>Add Drink</h2>
 
-@using (Html.BeginForm("Save", "Drinks"))
-{
-    <div class="form-group">
-        @Html.LabelFor(m => m.Name)
-        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Price)
-        @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
-    </div>
-    @Html.HiddenFor(m => m.Id)
-    <button type="submit" class="btn btn-default">Save</button>
-}
+    <h2>Add Drink</h2>
+    <form id="newDrink">
+        
+        <div class="form-group">
+            <label>Name</label>
+            <div class="tt-container">
+                <input id="name" name="name" required type="text" value="" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Price</label>
+            <div class="tt-container">
+                <input id="price" name="price" required type="text" value="" class="form-control" />
+            </div>
+        </div>
+
+        <button id="submit" type="submit" class="btn btn-default">Save</button>
+        
+    </form>
+
+    @section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            let vm = {};
+            var validator = $("#newDrink").validate({
+                    submitHandler: function () {
+                    var name = $('#name').val();
+                    var price = $('#price').val();
+                    vm.Name = name;
+                    vm.Price = price;
+                    $.ajax({
+                            url: "/Api/Drinks",
+                            method: "post",
+                            data: vm
+                            })
+                                .done(function () {
+                                    console.log(vm);
+                                    toastr.success("Drink successfully added!");
+                                    $('#name').val('');
+                                    $('#price').val('');
+                                    vm = {};
+                                    validator.resetForm();
+                                })
+                                .fail(function () {
+                                    toastr.error("Something went wrong!");
+                                    console.log(vm);
+                                });
+                            return false;
+                        }
+                    });
+        });
+
+
+    </script>
+    }

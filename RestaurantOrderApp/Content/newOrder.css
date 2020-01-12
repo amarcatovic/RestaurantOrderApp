@@ -1,0 +1,16 @@
+﻿.order-list-element
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.order-list-element>button{
+    color: red;
+    background-color: white;
+}
+
+.order-form{
+    border: 2px dashed black;
+    padding: 20px;
+}
