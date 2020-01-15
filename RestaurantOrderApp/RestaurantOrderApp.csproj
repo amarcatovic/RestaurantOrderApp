@@ -359,6 +359,7 @@
     <Content Include="Content\newOrder.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
+    <Content Include="Content\updateDrink.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -493,6 +494,8 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Order\New.cshtml" />
     <Content Include="Views\Meals\Add.cshtml" />
+    <Content Include="Views\Drinks\Info.cshtml" />
+    <Content Include="Views\Meals\Info.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

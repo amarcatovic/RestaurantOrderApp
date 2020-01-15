@@ -40,5 +40,21 @@ namespace RestaurantOrderApp.Controllers.Api
 
             return Created(new Uri(Request.RequestUri + "/" + mealDto.Id), mealDto);
         }
+
+        [HttpPut]
+        public IHttpActionResult updateMeal(MealDto mealDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("ModelState is not Valid");
+
+            var meal = _context.Meals.SingleOrDefault(m => m.Id == mealDto.Id);
+            if (meal == null)
+                return BadRequest("Meal not found");
+
+            Mapper.Map(mealDto, meal);
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }

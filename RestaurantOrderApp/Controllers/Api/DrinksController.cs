@@ -41,5 +41,22 @@ namespace RestaurantOrderApp.Controllers.Api
             drinkDto.Id = drink.Id;
             return Created(new Uri(Request.RequestUri + "/" + drink.Id), drinkDto);
         }
+
+        [HttpPut]
+        public IHttpActionResult updateDrink(DrinkDto drinkDto)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest("ModelState is not Valid");
+
+            var drink = _context.Drinks.SingleOrDefault(d => d.Id == drinkDto.Id);
+            if (drink == null)
+                return BadRequest("Drink has not been found");
+
+            Mapper.Map(drinkDto, drink);
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }

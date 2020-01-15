@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Info";
+    @Styles.Render("~/Content/updateDrink.css")
+}
+
+<h2>Meals Info</h2>
+
+<table id="drinks" class="table table-bordered table-hover">
+    <thead>
+        <tr><td>Meal</td><td>Price</td><td>Edit</td><td>Delete</td></tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<form id="updateDrinkForm" class="hidden border">
+    <div class="form-group">
+        <label>Name</label>
+        <div class="tt-container">
+            <input id="inputDrinkName" required type="text" name="name" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Name</label>
+        <div class="tt-container">
+            <input id="inputDrinkPrice" required type="text" name="price" class="form-control" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <button id="drinkFormCancel" type="reset" class="btn btn-danger">Cancel</button>
+</form>
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+
+            let vm = {};
+
+            $('#drinkFormCancel').on("click", function () {
+              $('#updateDrinkForm').addClass("hidden");
+            });
+
+            let table = $('#drinks').DataTable({
+                ajax: {
+                    url: '/API/Meal',
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'price'
+                    },
+                    {
+                        data: 'id',
+                        render: function (data, type, drink) {
+                            return `<button class="btn btn-link js-drink-edit" data-drink-id = "${data}" data-drink-name = "${drink.name}" data-drink-price = "${drink.price}">Edit</button>`;
+                        }
+                    },
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            return `<button class="btn btn-link js-drink-del" data-drink-id = "${data}">Delete</button>`;
+                        }
+                    }
+                ]
+            });
+
+            $('#drinks').on("click", ".js-drink-edit", function () {
+                let button = $(this);
+                vm.Id = button.attr("data-drink-id");
+                $('#updateDrinkForm').removeClass("hidden");
+                $('#drinkId').text("Id: " + vm.Id);
+                $('#inputDrinkName').val(button.attr("data-drink-name"));
+                $('#inputDrinkPrice').val(button.attr("data-drink-price"));
+                setInterval(function () {
+                    $('#updateDrinkForm').removeClass("border");
+                    setTimeout(1000, function () { $('#updateDrinkForm').addClass("border"); });
+                }, 2000);
+            });
+
+            let validate = $('#updateDrinkForm').validate({
+                submitHandler: function () {
+                    vm.Name = $('#inputDrinkName').val();
+                    vm.Price = $('#inputDrinkPrice').val();
+
+                    $.ajax({
+                        url: '/API/Meal',
+                        method: 'PUT',
+                        data: vm
+                    }).done(function () {
+                        toastr.success("Meal updated");
+                        $('#updateDrinkForm').addClass("hidden");
+                        vm = {};
+                        var table = $('#drinks').DataTable();
+                        table.ajax.reload();
+                        }).fail(function () {
+                        toastr.error("Something went wrong!");
+                         console.log(vm);
+                        });
+                 return false;
+                }
+            });
+
+        });
+    </script>
+
+}
