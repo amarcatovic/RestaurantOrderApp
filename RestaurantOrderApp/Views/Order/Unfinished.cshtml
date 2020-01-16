@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Unfinished";
+}
+
+<h2>Unfinished Orders</h2>
+
+<table id="orders" class="table table-bordered table-hover">
+    <thead><tr><td>Table Number</td><td>Time Ordered</td><td>Drinks</td><td>Meals</td></tr></thead>
+    <tbody></tbody>
+</table>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            let table = $('#orders').DataTable({
+
+                ajax: {
+                    url: '/API/Order',
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: 'tableId'
+                    },
+                    {
+                        data: 'dateOrdered',
+                        render: function (data) {
+                            let time = new Date(data);
+                            return `<td>${time.getHours()}:${time.getMinutes()}</td>`;
+                        }
+                    },
+                    {
+                        data: 'drinks'
+                    },
+                    {
+                        data: 'meals'
+                    }
+                ]
+
+            });
+
+        });
+    </script>
+
+}

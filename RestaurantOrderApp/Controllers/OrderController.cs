@@ -18,5 +18,11 @@ namespace RestaurantOrderApp.Controllers
         {
             return View();
         }
+
+        
+        public ActionResult Unfinished()
+        {
+            return View();
+        }
     }
 }

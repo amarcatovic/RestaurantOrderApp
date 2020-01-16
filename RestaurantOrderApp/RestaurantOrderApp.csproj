@@ -194,6 +194,7 @@
     <Compile Include="Dtos\DrinkDto.cs" />
     <Compile Include="Dtos\MealDto.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
+    <Compile Include="Dtos\OrdersDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -496,6 +497,7 @@
     <Content Include="Views\Meals\Add.cshtml" />
     <Content Include="Views\Drinks\Info.cshtml" />
     <Content Include="Views\Meals\Info.cshtml" />
+    <Content Include="Views\Order\Unfinished.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
