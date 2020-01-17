@@ -56,5 +56,17 @@ namespace RestaurantOrderApp.Controllers.Api
 
             return Ok();
         }
+
+        [HttpDelete]
+        public IHttpActionResult deleteMeal(int id)
+        {
+            var mealFromDb = _context.Meals.SingleOrDefault(m => m.Id == id);
+            if (mealFromDb == null)
+                return BadRequest("Meal not found");
+
+            _context.Meals.Remove(mealFromDb);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }

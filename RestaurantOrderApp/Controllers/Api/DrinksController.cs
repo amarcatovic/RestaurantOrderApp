@@ -58,5 +58,18 @@ namespace RestaurantOrderApp.Controllers.Api
 
             return Ok();
         }
+
+        [HttpDelete]
+        public IHttpActionResult deleteDrink(int id)
+        {
+            var drinkFromDb = _context.Drinks.SingleOrDefault(d => d.Id == id);
+            if (drinkFromDb == null)
+                return BadRequest("Drink not found");
+
+            _context.Drinks.Remove(drinkFromDb);
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }
