@@ -16,25 +16,45 @@
 
 </head>
 <body>
-    @Html.Partial("_Navbar")
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Drinks", "Info", "Drinks")</li>
+                    <li>@Html.ActionLink("Meals", "Info", "Meals")</li>
+                    <li>@Html.ActionLink("New Order", "New", "Order")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
     <div class="container body-content">
         @RenderBody()
         <hr />
     </div>
 
-        <footer class="bg-light py-5">
-            <div class="container">
-                <div class="small text-center text-muted">Copyright &copy; 2019 - Amar Ćatović</div>
-            </div>
-        </footer>
+    <footer class="bg-light py-5">
+        <div class="container">
+            <div class="small text-center text-muted">Copyright &copy; 2019 - Amar Ćatović</div>
+        </div>
+    </footer>
 
 
-        @Scripts.Render("~/Content/vendor/jquery/jquery.min.js")
-        @Scripts.Render("~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js")
-        @Scripts.Render("~/Content/vendor/jquery-easing/jquery.easing.min.js")
-        @Scripts.Render("~/Content/vendor/magnific-popup/jquery.magnific-popup.min.js")
-        @Scripts.Render("~/Content/js/creative.min.js")
-        @Scripts.Render("~/bundles/lib")
-        @RenderSection("scripts", required: false)
+    @Scripts.Render("~/Content/vendor/jquery/jquery.min.js")
+    @Scripts.Render("~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js")
+    @Scripts.Render("~/Content/vendor/jquery-easing/jquery.easing.min.js")
+    @Scripts.Render("~/Content/vendor/magnific-popup/jquery.magnific-popup.min.js")
+    @Scripts.Render("~/Content/js/creative.min.js")
+    @Scripts.Render("~/bundles/lib")
+    @RenderSection("scripts", required: false)
 </body>
 </html>
